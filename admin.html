@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Admin — AutoRendez</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-header">
+        <i class="fas fa-car-side"></i>
+        <h1>AutoRendez Admin</h1>
+        <p>Connectez-vous pour gérer les rendez-vous</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" placeholder="Entrez le mot de passe" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fas fa-sign-in-alt"></i> Se connecter
+        </button>
+        <p class="login-hint">Mot de passe par défaut : <code>admin123</code></p>
+      </form>
+      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour au site</a>
+    </div>
+  </div>
+
+  <div id="dashboard" class="dashboard hidden">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-car-side"></i>
+        <span>AutoRendez</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="sidebar-link active" data-section="overview">
+          <i class="fas fa-chart-pie"></i> Vue d'ensemble
+        </a>
+        <a href="#" class="sidebar-link" data-section="appointments">
+          <i class="fas fa-calendar-alt"></i> Rendez-vous
+        </a>
+        <a href="#" class="sidebar-link" data-section="services">
+          <i class="fas fa-wrench"></i> Services
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="index.html" class="btn btn-outline btn-sm">
+          <i class="fas fa-home"></i> Site client
+        </a>
+        <button id="logoutBtn" class="btn btn-danger btn-sm">
+          <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="admin-header">
+        <h2 id="pageTitle">Vue d'ensemble</h2>
+        <div class="header-actions">
+          <span class="admin-badge"><i class="fas fa-user-shield"></i> Administrateur</span>
+          <button type="button" class="btn btn-primary btn-sm pwa-install-btn hidden" data-install-app>
+            <i class="fas fa-download"></i> Installer l’app
+          </button>
+        </div>
+      </header>
+      <p id="pwaStatus" class="pwa-status hidden" role="status" aria-live="polite"></p>
+
+      <section id="section-overview" class="admin-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-calendar-check"></i></div>
+            <div>
+              <h3 id="statTotal">0</h3>
+              <p>Total RDV</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
+            <div>
+              <h3 id="statPending">0</h3>
+              <p>En attente</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <h3 id="statConfirmed">0</h3>
+              <p>Confirmés</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-times-circle"></i></div>
+            <div>
+              <h3 id="statCancelled">0</h3>
+              <p>Annulés</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Derniers rendez-vous</h3>
+          <div id="recentAppointments" class="table-responsive"></div>
+        </div>
+      </section>
+
+      <section id="section-appointments" class="admin-section hidden">
+        <div class="card emailjs-settings">
+          <h3>Configuration des emails de confirmation</h3>
+          <p class="text-muted">Saisissez les identifiants fournis dans votre compte EmailJS. Le modèle d’email doit utiliser : <code>to_email</code>, <code>to_name</code>, <code>service_name</code>, <code>appointment_date</code>, <code>appointment_time</code>, <code>vehicle</code>, <code>registration</code> et <code>message</code>.</p>
+          <form id="emailjsConfigForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="emailjsServiceId">Service ID</label>
+                <input type="text" id="emailjsServiceId" name="serviceId" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label for="emailjsTemplateId">Template ID</label>
+                <input type="text" id="emailjsTemplateId" name="templateId" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label for="emailjsPublicKey">Clé publique</label>
+                <input type="text" id="emailjsPublicKey" name="publicKey" autocomplete="off" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer la configuration EmailJS</button>
+          </form>
+        </div>
+        <div id="adminNotification" class="alert hidden" role="status" aria-live="polite">
+          <i class="fas fa-envelope"></i>
+          <p></p>
+        </div>
+        <div class="toolbar">
+          <div class="filters">
+            <select id="filterStatus">
+              <option value="all">Tous les statuts</option>
+              <option value="pending">En attente</option>
+              <option value="confirmed">Confirmé</option>
+              <option value="completed">Terminé</option>
+              <option value="cancelled">Annulé</option>
+            </select>
+            <input type="text" id="filterSearch" placeholder="Rechercher (nom, email, plaque…)">
+          </div>
+        </div>
+
+        <div class="card">
+          <div id="allAppointments" class="table-responsive"></div>
+        </div>
+      </section>
+
+      <section id="section-services" class="admin-section hidden">
+        <div class="card">
+          <h3>Gérer les services proposés</h3>
+          <p class="text-muted">Ajoutez une prestation ou modifiez les informations d’un service existant. Les changements sont enregistrés dans ce navigateur et visibles sur le site client.</p>
+          <form id="serviceForm" class="service-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="serviceName">Nom du service *</label>
+                <input type="text" id="serviceName" name="name" maxlength="80" required>
+              </div>
+              <div class="form-group">
+                <label for="serviceDuration">Durée *</label>
+                <input type="text" id="serviceDuration" name="duration" maxlength="40" placeholder="1h30" required>
+              </div>
+              <div class="form-group">
+                <label for="servicePrice">Prix *</label>
+                <input type="text" id="servicePrice" name="price" maxlength="40" placeholder="89€" required>
+              </div>
+              <div class="form-group">
+                <label for="serviceIcon">Icône Font Awesome</label>
+                <input type="text" id="serviceIcon" name="icon" value="fa-wrench" maxlength="60" pattern="fa-[a-z0-9\-]+" title="Saisissez une classe d’icône, par exemple fa-wrench.">
+              </div>
+              <div class="form-group full">
+                <label for="serviceDescription">Description *</label>
+                <textarea id="serviceDescription" name="description" rows="3" maxlength="300" required></textarea>
+              </div>
+            </div>
+            <div class="service-form-actions">
+              <button type="submit" id="saveServiceBtn" class="btn btn-primary"><i class="fas fa-plus"></i> Ajouter le service</button>
+              <button type="button" id="cancelServiceEditBtn" class="btn btn-outline hidden">Annuler la modification</button>
+            </div>
+          </form>
+          <p id="serviceAdminMessage" class="service-admin-message" role="status" aria-live="polite"></p>
+          <div id="servicesListAdmin" class="services-admin-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

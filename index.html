@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>AutoRendez — Prise de rendez-vous garage automobile</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <a href="index.html" class="logo">
+        <i class="fas fa-car-side"></i>
+        <span>AutoRendez</span>
+      </a>
+      <nav class="nav">
+        <a href="#accueil" class="nav-link active">Accueil</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#compte" class="nav-link">Mon compte</a>
+        <a href="#rdv" class="nav-link">Prendre RDV</a>
+        <a href="#mes-rdv" class="nav-link">Mes rendez-vous</a>
+      </nav>
+      <button type="button" class="btn btn-primary btn-sm pwa-install-btn hidden" data-install-app>
+        <i class="fas fa-download"></i> Installer l’app
+      </button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu mobile">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  <p id="pwaStatus" class="pwa-status hidden" role="status" aria-live="polite"></p>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#accueil" class="nav-link">Accueil</a>
+    <a href="#services" class="nav-link">Services</a>
+    <a href="#compte" class="nav-link">Mon compte</a>
+    <a href="#rdv" class="nav-link">Prendre RDV</a>
+    <a href="#mes-rdv" class="nav-link">Mes rendez-vous</a>
+  </div>
+
+  <section id="accueil" class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1>Prenez rendez-vous en ligne pour votre véhicule</h1>
+        <p>Révisions, vidanges, freins, pneus… Réservez votre créneau en quelques clics. Rapide, simple et 100 % en ligne.</p>
+        <a href="#rdv" class="btn btn-primary btn-lg">
+          <i class="fas fa-calendar-check"></i> Réserver maintenant
+        </a>
+      </div>
+
+      <div class="hero-auth">
+        <div id="accountForms" class="account-card">
+          <div class="auth-tabs" role="tablist" aria-label="Accès à votre compte">
+            <button type="button" class="auth-tab active" id="loginTab" role="tab" aria-selected="true" aria-controls="loginForm">
+              Se connecter
+            </button>
+            <button type="button" class="auth-tab" id="registerTab" role="tab" aria-selected="false" aria-controls="registerForm">
+              Créer un compte
+            </button>
+          </div>
+
+          <form id="loginForm" class="auth-form" role="tabpanel" aria-labelledby="loginTab">
+            <div class="form-group">
+              <label for="loginEmail">Adresse email</label>
+              <input type="email" id="loginEmail" name="email" autocomplete="username" placeholder="Votre adresse email" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Mot de passe</label>
+              <input type="password" id="loginPassword" name="password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-right-to-bracket"></i> Se connecter
+            </button>
+          </form>
+
+          <form id="registerForm" class="auth-form hidden" role="tabpanel" aria-labelledby="registerTab">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="accountName">Nom complet</label>
+                <input type="text" id="accountName" name="nom" autocomplete="name" required>
+              </div>
+              <div class="form-group">
+                <label for="accountPhone">Téléphone</label>
+                <input type="tel" id="accountPhone" name="telephone" autocomplete="tel" required>
+              </div>
+              <div class="form-group">
+                <label for="registerEmail">Adresse email</label>
+                <input type="email" id="registerEmail" name="email" autocomplete="email" required>
+              </div>
+              <div class="form-group">
+                <label for="registerPassword">Mot de passe (8 caractères minimum)</label>
+                <input type="password" id="registerPassword" name="password" autocomplete="new-password" minlength="8" required>
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword">Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" minlength="8" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-user-plus"></i> Créer mon compte
+            </button>
+          </form>
+          <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+          <p class="auth-notice">Démonstration locale : les comptes sont enregistrés dans ce navigateur.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nos services</h2>
+        <p>Des prestations adaptées à tous les véhicules</p>
+      </div>
+      <div class="services-grid" id="servicesGrid"></div>
+    </div>
+  </section>
+
+  <section id="compte" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Pourquoi choisir AutoRendez ?</h2>
+        <p>Une expérience rapide, fiable et pensée pour les clients comme pour les garages.</p>
+      </div>
+
+      <div id="accountWelcome" class="account-card account-welcome hidden">
+        <div>
+          <h3>Bonjour, <span id="welcomeName"></span> !</h3>
+          <p>Vous êtes connecté avec <span id="welcomeEmail"></span>.</p>
+        </div>
+        <button type="button" id="logoutButton" class="btn btn-outline">
+          <i class="fas fa-right-from-bracket"></i> Se déconnecter
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="rdv" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2>Prendre un rendez-vous</h2>
+        <p>Remplissez le formulaire ci-dessous. Nous vous confirmerons par email ou SMS.</p>
+      </div>
+
+      <p id="bookingAuthNotice" class="auth-required">Connectez-vous à votre compte pour réserver un rendez-vous. <a href="#compte">Accéder à mon compte</a></p>
+
+      <form id="bookingForm" class="booking-form hidden">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nom">Nom complet *</label>
+            <input type="text" id="nom" name="nom" required placeholder="Jean Dupont" readonly>
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required placeholder="jean.dupont@email.com" readonly>
+          </div>
+          <div class="form-group">
+            <label for="telephone">Téléphone *</label>
+            <input type="tel" id="telephone" name="telephone" required placeholder="+216 41 483 922" readonly>
+          </div>
+          <div class="form-group">
+            <label for="marque">Marque du véhicule *</label>
+            <input type="text" id="marque" name="marque" required placeholder="Peugeot, Renault, Toyota…">
+          </div>
+          <div class="form-group">
+            <label for="modele">Modèle *</label>
+            <input type="text" id="modele" name="modele" required placeholder="301, Clio, Corolla…">
+          </div>
+          <div class="form-group">
+            <label for="annee">Année</label>
+            <input type="number" id="annee" name="annee" min="1990" max="2026" placeholder="2020">
+          </div>
+          <div class="form-group">
+            <label for="immatriculation">Immatriculation</label>
+            <input type="text" id="immatriculation" name="immatriculation" placeholder="123TUN4546">
+          </div>
+          <div class="form-group">
+            <label for="service">Service souhaité *</label>
+            <select id="service" name="service" required>
+              <option value="">-- Choisir un service --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="date">Date souhaitée *</label>
+            <input type="date" id="date" name="date" required>
+          </div>
+          <div class="form-group">
+            <label for="creneau">Créneau horaire *</label>
+            <select id="creneau" name="creneau" required>
+              <option value="">-- Choisir un créneau --</option>
+              <option value="08:30">08:30 - 09:30</option>
+              <option value="09:30">09:30 - 10:30</option>
+              <option value="10:30">10:30 - 11:30</option>
+              <option value="11:30">11:30 - 12:30</option>
+              <option value="14:00">14:00 - 15:00</option>
+              <option value="15:00">15:00 - 16:00</option>
+              <option value="16:00">16:00 - 17:00</option>
+              <option value="17:00">17:00 - 18:00</option>
+            </select>
+          </div>
+        </div>
+        <p id="bookingAvailability" class="auth-notice" role="status" aria-live="polite"></p>
+
+        <div class="form-group full">
+          <label for="message">Message / remarques</label>
+          <textarea id="message" name="message" rows="3" placeholder="Problème rencontré, demande particulière…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-check"></i> Confirmer le rendez-vous
+          </button>
+        </div>
+      </form>
+
+      <div id="bookingSuccess" class="alert alert-success hidden">
+        <i class="fas fa-check-circle"></i>
+        <div>
+          <strong>Rendez-vous enregistré !</strong>
+          <p>Votre demande a bien été prise en compte. Vous recevrez une confirmation par email ou par SMS.</p>
+          <button type="button" id="bookingPrintButton" class="btn btn-outline hidden">
+            <i class="fas fa-file-pdf"></i> Imprimer / enregistrer en PDF
+          </button>
+        </div>
+      </div>
+    </div>      
+  </section>
+
+  <section id="mes-rdv" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Mes rendez-vous</h2>
+        <p>Retrouvez les réservations liées à votre compte client.</p>
+      </div>
+
+      <div id="myAppointments" class="appointments-list">
+        <p class="empty-state">Connectez-vous pour consulter vos rendez-vous.</p>
+      </div>
+    </div>
+  </section>
+
+  <div id="bookingPrintDocument" class="booking-print-document" aria-hidden="true"></div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3><i class="fas fa-car-side"></i> AutoRendez</h3>
+          <p>Votre garage de confiance pour tous vos entretiens et réparations automobiles.</p>
+        </div>
+        <div>
+          <h4>Horaires</h4>
+          <p>Lun - Ven : 8h30 - 18h00<br>Samedi : 9h00 - 13h00</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p><i class="fas fa-phone"></i>+216 41 483 922<br>
+             <i class="fas fa-envelope"></i> contact@autorendez.fr</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 AutoRendez. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/client.js"></script>
+
+  <script>
+    (() => {
+      if (window.__autorendezAuthInlineLoaded) return;
+      window.__autorendezAuthInlineLoaded = true;
+
+      const ACCOUNTS_KEY = 'autorendez_accounts';
+      const SESSION_KEY = 'autorendez_client_session';
+      const PASSWORD_ITERATIONS = 120000;
+
+      const normalizeEmail = (email) => String(email || '').trim().toLowerCase();
+
+      const getAccounts = () => {
+        const raw = localStorage.getItem(ACCOUNTS_KEY);
+        const accounts = raw ? JSON.parse(raw) : [];
+        return Array.isArray(accounts) ? accounts : [];
+      };
+
+      const setAuthMessage = (message) => {
+        const messageElement = document.getElementById('authMessage');
+        if (!messageElement) return;
+        messageElement.textContent = message;
+        messageElement.classList.remove('success');
+      };
+
+      const encodeBytes = (bytes) => btoa(String.fromCharCode(...bytes));
+      const decodeBytes = (value) => Uint8Array.from(atob(value), (character) => character.charCodeAt(0));
+
+      const hashPassword = async (password, salt = window.crypto.getRandomValues(new Uint8Array(16))) => {
+        if (!window.crypto || !window.crypto.subtle) {
+          throw new Error('Le stockage sécurisé des mots de passe nécessite un navigateur moderne et une page servie en HTTPS ou sur localhost.');
+        }
+
+        const key = await window.crypto.subtle.importKey(
+          'raw',
+          new TextEncoder().encode(password),
+          'PBKDF2',
+          false,
+          ['deriveBits']
+        );
+
+        const hash = await window.crypto.subtle.deriveBits({
+          name: 'PBKDF2',
+          salt,
+          iterations: PASSWORD_ITERATIONS,
+          hash: 'SHA-256'
+        }, key, 256);
+
+        return {
+          salt: encodeBytes(salt),
+          passwordHash: encodeBytes(new Uint8Array(hash))
+        };
+      };
+
+      const verifyPassword = async (password, account) => {
+        const result = await hashPassword(password, decodeBytes(account.salt));
+        return result.passwordHash === account.passwordHash;
+      };
+
+      const showAccount = (account) => {
+        const accountForms = document.getElementById('accountForms');
+        const accountWelcome = document.getElementById('accountWelcome');
+        const welcomeName = document.getElementById('welcomeName');
+        const welcomeEmail = document.getElementById('welcomeEmail');
+        const bookingAuthNotice = document.getElementById('bookingAuthNotice');
+        const bookingForm = document.getElementById('bookingForm');
+
+        if (accountForms) accountForms.classList.add('hidden');
+        if (accountWelcome) accountWelcome.classList.remove('hidden');
+        if (welcomeName) welcomeName.textContent = account.nom;
+        if (welcomeEmail) welcomeEmail.textContent = account.email;
+        if (bookingAuthNotice) bookingAuthNotice.classList.add('hidden');
+        if (bookingForm) {
+          bookingForm.classList.remove('hidden');
+          bookingForm.elements.nom.value = account.nom;
+          bookingForm.elements.email.value = account.email;
+          bookingForm.elements.telephone.value = account.telephone;
+        }
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.handleLogin && window.handleRegistration) return;
+
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const logoutButton = document.getElementById('logoutButton');
+
+        if (!loginForm || !registerForm) return;
+
+        const showSignedOut = () => {
+          const accountForms = document.getElementById('accountForms');
+          const accountWelcome = document.getElementById('accountWelcome');
+          const bookingAuthNotice = document.getElementById('bookingAuthNotice');
+          const bookingForm = document.getElementById('bookingForm');
+          const bookingSuccess = document.getElementById('bookingSuccess');
+
+          if (accountForms) accountForms.classList.remove('hidden');
+          if (accountWelcome) accountWelcome.classList.add('hidden');
+          if (bookingAuthNotice) bookingAuthNotice.classList.remove('hidden');
+          if (bookingForm) {
+            bookingForm.classList.add('hidden');
+            bookingForm.reset();
+          }
+          if (bookingSuccess) bookingSuccess.classList.add('hidden');
+        };
+
+        const setAccountFormMode = (mode) => {
+          const isRegisterMode = mode === 'register';
+          loginForm.classList.toggle('hidden', isRegisterMode);
+          registerForm.classList.toggle('hidden', !isRegisterMode);
+          loginTab?.classList.toggle('active', !isRegisterMode);
+          registerTab?.classList.toggle('active', isRegisterMode);
+          loginTab?.setAttribute('aria-selected', String(!isRegisterMode));
+          registerTab?.setAttribute('aria-selected', String(isRegisterMode));
+          setAuthMessage('');
+        };
+
+        loginTab?.addEventListener('click', () => setAccountFormMode('login'));
+        registerTab?.addEventListener('click', () => setAccountFormMode('register'));
+
+        loginForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const formData = new FormData(loginForm);
+          const email = normalizeEmail(formData.get('email'));
+          const password = String(formData.get('password') || '');
+
+          try {
+            const account = getAccounts().find((savedAccount) => normalizeEmail(savedAccount.email) === email);
+            if (!account || !(await verifyPassword(password, account))) {
+              setAuthMessage('Adresse email ou mot de passe incorrect.');
+              return;
+            }
+
+            sessionStorage.setItem(SESSION_KEY, email);
+            loginForm.reset();
+            showAccount(account);
+          } catch (error) {
+            setAuthMessage(error.message || 'Impossible de se connecter. Vérifiez le stockage de votre navigateur.');
+          }
+        });
+
+        registerForm.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          const formData = new FormData(registerForm);
+          const nom = String(formData.get('nom') || '').trim();
+          const telephone = String(formData.get('telephone') || '').trim();
+          const email = normalizeEmail(formData.get('email'));
+          const password = String(formData.get('password') || '');
+          const confirmPassword = String(formData.get('confirmPassword') || '');
+
+          if (password !== confirmPassword) {
+            setAuthMessage('Les deux mots de passe ne correspondent pas.');
+            return;
+          }
+
+          try {
+            const accounts = getAccounts();
+            if (accounts.some((account) => normalizeEmail(account.email) === email)) {
+              setAuthMessage('Un compte existe déjà avec cette adresse email.');
+              return;
+            }
+
+            const credentials = await hashPassword(password);
+            const account = { nom, telephone, email, ...credentials };
+            localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, account]));
+            sessionStorage.setItem(SESSION_KEY, email);
+            registerForm.reset();
+            showAccount(account);
+          } catch (error) {
+            setAuthMessage(error.message || 'Impossible de créer le compte. Vérifiez le stockage de votre navigateur.');
+          }
+        });
+
+        logoutButton?.addEventListener('click', () => {
+          try {
+            sessionStorage.removeItem(SESSION_KEY);
+            showSignedOut();
+            setAuthMessage('');
+          } catch (error) {
+            setAuthMessage('Impossible de fermer la session. Vérifiez le stockage de votre navigateur.');
+          }
+        });
+
+        try {
+          const sessionEmail = sessionStorage.getItem(SESSION_KEY);
+          const account = sessionEmail && getAccounts().find((savedAccount) => normalizeEmail(savedAccount.email) === sessionEmail);
+          if (account) {
+            showAccount(account);
+          } else {
+            showSignedOut();
+          }
+        } catch (error) {
+          showSignedOut();
+          setAuthMessage(error.message || 'Impossible de charger votre compte.');
+        }
+      });
+    })();
+  </script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>AutoRendez — Prise de rendez-vous garage automobile</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <a href="index.html" class="logo">
+        <i class="fas fa-car-side"></i>
+        <span>AutoRendez</span>
+      </a>
+      <nav class="nav">
+        <a href="#accueil" class="nav-link active">Accueil</a>
+        <a href="#services" class="nav-link">Services</a>
+            <a href="#rdv" class="nav-link">Prendre RDV</a>
+        <a href="#mes-rdv" class="nav-link">Mes rendez-vous</a>
+        <a href="admin.html" class="nav-link admin-link"><i class="fas fa-lock"></i> Admin</a>
+      </nav>
+      <button type="button" class="btn btn-primary btn-sm pwa-install-btn hidden" data-install-app>
+        <i class="fas fa-download"></i> Installer l’app
+      </button>
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu mobile">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  <p id="pwaStatus" class="pwa-status hidden" role="status" aria-live="polite"></p>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#accueil" class="nav-link">Accueil</a>
+    <a href="#services" class="nav-link">Services</a>
+    <a href="#rdv" class="nav-link">Prendre RDV</a>
+    <a href="#mes-rdv" class="nav-link">Mes rendez-vous</a>
+    <a href="admin.html" class="nav-link">Admin</a>
+  </div>
+
+  <section id="accueil" class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1>Prenez rendez-vous en ligne pour votre véhicule</h1>
+        <p>Révisions, vidanges, freins, pneus… Réservez votre créneau en quelques clics. Rapide, simple et 100 % en ligne.</p>
+        <a href="#rdv" class="btn btn-primary btn-lg">
+          <i class="fas fa-calendar-check"></i> Réserver maintenant
+        </a>
+      </div>
+      <div class="hero-image">
+        <div class="hero-card">
+          <i class="fas fa-tools"></i>
+          <h3>Garage professionnel</h3>
+          <p>Techniciens qualifiés &amp; pièces d’origine</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nos services</h2>
+        <p>Des prestations adaptées à tous les véhicules</p>
+      </div>
+      <div class="services-grid" id="servicesGrid"></div>
+    </div>
+  </section>
+
+  <section id="rdv" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2>Prendre un rendez-vous</h2>
+        <p>Remplissez le formulaire ci-dessous. Nous vous confirmerons par email ou SMS.</p>
+      </div>
+
+      <form id="bookingForm" class="booking-form">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nom">Nom complet *</label>
+            <input type="text" id="nom" name="nom" required placeholder="Jean Dupont">
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required placeholder="jean.dupont@email.com">
+          </div>
+          <div class="form-group">
+            <label for="telephone">Téléphone *</label>
+            <input type="tel" id="telephone" name="telephone" required placeholder="+216 12 345 678">
+          </div>
+          <div class="form-group">
+            <label for="marque">Marque du véhicule *</label>
+            <input type="text" id="marque" name="marque" required placeholder="Peugeot, Renault, Toyota…">
+          </div>
+          <div class="form-group">
+            <label for="modele">Modèle *</label>
+            <input type="text" id="modele" name="modele" required placeholder="208, Clio, Corolla…">
+          </div>
+          <div class="form-group">
+            <label for="annee">Année</label>
+            <input type="number" id="annee" name="annee" min="1990" max="2026" placeholder="2020">
+          </div>
+          <div class="form-group">
+            <label for="immatriculation">Immatriculation</label>
+            <input type="text" id="immatriculation" name="immatriculation" placeholder="123 TUN 456">
+          </div>
+          <div class="form-group">
+            <label for="service">Service souhaité *</label>
+            <select id="service" name="service" required>
+              <option value="">-- Choisir un service --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="date">Date souhaitée *</label>
+            <input type="date" id="date" name="date" required>
+          </div>
+          <div class="form-group">
+            <label for="creneau">Créneau horaire *</label>
+            <select id="creneau" name="creneau" required>
+              <option value="">-- Choisir un créneau --</option>
+              <option value="08:30">08:30 - 09:30</option>
+              <option value="09:30">09:30 - 10:30</option>
+              <option value="10:30">10:30 - 11:30</option>
+              <option value="11:30">11:30 - 12:30</option>
+              <option value="14:00">14:00 - 15:00</option>
+              <option value="15:00">15:00 - 16:00</option>
+              <option value="16:00">16:00 - 17:00</option>
+              <option value="17:00">17:00 - 18:00</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label for="message">Message / remarques</label>
+          <textarea id="message" name="message" rows="3" placeholder="Problème rencontré, demande particulière…"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fas fa-check"></i> Confirmer le rendez-vous
+          </button>
+        </div>
+      </form>
+
+      <div id="bookingSuccess" class="alert alert-success hidden">
+        <i class="fas fa-check-circle"></i>
+        <div>
+          <strong>Rendez-vous enregistré !</strong>
+          <p>Votre demande a bien été prise en compte. Vous recevrez une confirmation sous peu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mes-rdv" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Mes rendez-vous</h2>
+        <p>Retrouvez vos réservations en indiquant votre email ou téléphone</p>
+      </div>
+
+      <div class="search-box">
+        <input type="text" id="searchContact" placeholder="Email ou numéro de téléphone">
+        <button class="btn btn-primary" id="searchBtn">
+          <i class="fas fa-search"></i> Rechercher
+        </button>
+      </div>
+
+      <div id="myAppointments" class="appointments-list">
+        <p class="empty-state">Aucun rendez-vous trouvé. Effectuez une recherche.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3><i class="fas fa-car-side"></i> AutoRendez</h3>
+          <p>Votre garage de confiance pour tous vos entretiens et réparations automobiles.</p>
+        </div>
+        <div>
+          <h4>Horaires</h4>
+          <p>Lun - Ven : 8h30 - 18h00<br>Samedi : 9h00 - 13h00</p>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p><i class="fas fa-phone"></i> 01 23 45 67 89<br>
+             <i class="fas fa-envelope"></i> contact@autorendez.fr</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 AutoRendez. Tous droits réservés. — <a href="admin.html">Espace administrateur</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/client.js"></script>
+  <script src="js/pwa.js"></script>
+</body>
+</html>
